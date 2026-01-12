@@ -1,11 +1,20 @@
-🚀 GTA Service Dispatch Pilot: An AI-native voice interface built to bridge the gap between after-hours emergency calls and revenue capture.
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-Key Capabilities:
+# Run and deploy your AI Studio app
 
-🚨 Emergency Triage: Instant recognition of "Gas Smell" or "CO Alarm" with mandated safety instructions.
+This contains everything you need to run your app locally.
 
-🛠️ Technical Diagnostics: Guided troubleshooting for common furnace error codes to minimize unnecessary truck rolls.
+View your app in AI Studio: https://ai.studio/apps/drive/1lmNgv0puCUybv48Ml1PLhhAzPfI-vs_7
 
-💰 Rebate Capture: Real-time eligibility vetting for the Home Renovation Savings™ program (Up to $12,000 rebates).
+## Run Locally
 
-📍 Localized: Pre-configured for GTA geography and Ontario HVAC regulations.
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

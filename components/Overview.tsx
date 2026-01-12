@@ -4,7 +4,7 @@ import React from 'react';
 const Overview: React.FC = () => {
   return (
     <>
-      <section id="overview" className="py-40 bg-slate-50 relative overflow-hidden">
+      <section id="overview" className="py-40 bg-slate-50 relative overflow-hidden scroll-mt-28">
         <div className="container mx-auto px-6">
           <div className="max-w-5xl mb-24">
             <h2 className="text-5xl lg:text-7xl font-black text-navy mb-10 tracking-tighter leading-tight">Pilot Overview</h2>
@@ -32,7 +32,7 @@ const Overview: React.FC = () => {
             </div>
             <div className="bg-white p-14 rounded-[3rem] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.1)] border-2 border-slate-100 hover:border-orange-500 transition-all group hover:-translate-y-2">
               <div className="w-20 h-20 bg-slate-100 text-slate-800 rounded-3xl flex items-center justify-center mb-10 group-hover:bg-navy group-hover:text-white transition-all shadow-xl">
-                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
               </div>
               <h3 className="text-3xl font-black text-navy mb-6 uppercase tracking-tight">Multi-Persona AI</h3>
               <p className="text-xl text-slate-700 font-medium leading-relaxed">The Service Agent handles the soft-sell and qualification, while the Emergency Specialist takes over for high-stakes emergency situations.</p>
@@ -41,7 +41,7 @@ const Overview: React.FC = () => {
         </div>
       </section>
 
-      <section id="safety" className="py-40 bg-white border-y-8 border-slate-100">
+      <section id="safety" className="py-40 bg-white border-y-8 border-slate-100 scroll-mt-28">
         <div className="container mx-auto px-6">
           <div className="flex flex-col xl:flex-row gap-24 items-center">
             <div className="xl:w-1/2">

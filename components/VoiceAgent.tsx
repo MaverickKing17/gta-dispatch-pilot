@@ -218,7 +218,7 @@ const VoiceAgent: React.FC = () => {
   const currentMsg = transcriptions[transcriptions.length - 1];
 
   return (
-    <section id="demo" className="py-24 md:py-32 bg-white relative overflow-hidden">
+    <section id="demo" className="py-24 md:py-32 bg-white relative overflow-hidden scroll-mt-28">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12 md:mb-16">

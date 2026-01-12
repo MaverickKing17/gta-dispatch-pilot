@@ -7,14 +7,11 @@ import Footer from './components/Footer';
 
 const App: React.FC = () => {
   // Global interceptor for all internal anchor links (#)
-  // This prevents browser navigation errors in certain environments (like blob URLs/sandboxes)
-  // and ensures smooth scrolling with correct offsets for the fixed header.
   useEffect(() => {
     const handleInternalLinks = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
       
-      // Only intercept links that start with # and belong to the current page
       if (anchor && anchor.getAttribute('href')?.startsWith('#')) {
         const id = anchor.getAttribute('href')?.substring(1);
         if (!id) return;
@@ -23,18 +20,13 @@ const App: React.FC = () => {
         if (element) {
           e.preventDefault();
           
-          // Offset calculation: h-28 is 112px
-          const navOffset = 112; 
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - navOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
+          // Using a more modern approach: find the element and scroll it into view.
+          // The scroll offset is handled by CSS (scroll-margin-top) on the target sections.
+          // This is generally more robust than manual pixel calculation in JS.
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
           });
-
-          // Note: Removed window.history.pushState here to prevent SecurityError 
-          // in restricted origins/blob URL environments.
         }
       }
     };
@@ -52,9 +44,9 @@ const App: React.FC = () => {
             <span className="text-white font-black tracking-tighter text-2xl md:text-3xl uppercase">Dispatch Pilot</span>
           </div>
           <div className="hidden lg:flex gap-10 xl:gap-14 text-white text-lg font-black uppercase tracking-[0.2em]">
-            <a href="#overview" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500">Overview</a>
-            <a href="#demo" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500">Voice Demo</a>
-            <a href="#safety" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500">Safety Protocols</a>
+            <a href="#overview" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer">Overview</a>
+            <a href="#demo" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer">Voice Demo</a>
+            <a href="#safety" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer">Safety Protocols</a>
           </div>
           <a 
             href="#demo"

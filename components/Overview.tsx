@@ -35,7 +35,7 @@ const Overview: React.FC = () => {
                 <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
               </div>
               <h3 className="text-3xl font-black text-navy mb-6 uppercase tracking-tight">Multi-Persona AI</h3>
-              <p className="text-xl text-slate-700 font-medium leading-relaxed">Chloe handles the soft-sell and service, while Sam takes over for high-stakes emergency situations.</p>
+              <p className="text-xl text-slate-700 font-medium leading-relaxed">The Service Agent handles the soft-sell and qualification, while the Emergency Specialist takes over for high-stakes emergency situations.</p>
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ const Overview: React.FC = () => {
                     <code className="block">{`> INCOMING_CALL: 416-555-0199`}</code>
                     <code className="block">{`> SCANNING: "Gas smell in basement"`}</code>
                     <code className="block text-red-400 font-black bg-red-500/10 px-3 py-1 rounded-lg shadow-sm">{`> TRIGGER: SAFETY_PROTOCOL_ALPHA`}</code>
-                    <code className="block text-red-500">{`> HANDOFF: SAM (EMERGENCY)`}</code>
+                    <code className="block text-red-500">{`> HANDOFF: EMERGENCY SPECIALIST`}</code>
                     <code className="block bg-red-600 text-white px-4 py-2 rounded-xl animate-pulse shadow-lg">{`> ACTION: MANDATORY EVACUATION`}</code>
                   </pre>
                 </div>

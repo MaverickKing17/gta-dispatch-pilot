@@ -15,7 +15,7 @@ const VoiceAgent: React.FC = () => {
   const [status, setStatus] = useState<DispatchStatus>(DispatchStatus.IDLE);
   const [transcriptions, setTranscriptions] = useState<TranscriptionItem[]>([]);
   const [isMuted, setIsMuted] = useState(false);
-  const [currentPersona, setCurrentPersona] = useState<'CHLOE' | 'SAM'>('CHLOE');
+  const [currentPersona, setCurrentPersona] = useState<'SERVICE' | 'EMERGENCY'>('SERVICE');
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const outputContextRef = useRef<AudioContext | null>(null);
@@ -28,10 +28,10 @@ const VoiceAgent: React.FC = () => {
   const addTranscription = (speaker: 'user' | 'agent', text: string) => {
     if (speaker === 'agent') {
       const lowerText = text.toLowerCase();
-      if (lowerText.includes('sam') || lowerText.includes('emergency') || lowerText.includes('urgent') || lowerText.includes('911')) {
-        setCurrentPersona('SAM');
-      } else if (lowerText.includes('chloe') || lowerText.includes('rebate') || lowerText.includes('welcome') || lowerText.includes('hi')) {
-        setCurrentPersona('CHLOE');
+      if (lowerText.includes('emergency') || lowerText.includes('urgent') || lowerText.includes('911') || lowerText.includes('safety')) {
+        setCurrentPersona('EMERGENCY');
+      } else if (lowerText.includes('rebate') || lowerText.includes('welcome') || lowerText.includes('representative') || lowerText.includes('representative')) {
+        setCurrentPersona('SERVICE');
       }
     }
 
@@ -57,7 +57,7 @@ const VoiceAgent: React.FC = () => {
     sourcesRef.current.forEach(source => source.stop());
     sourcesRef.current.clear();
     setStatus(DispatchStatus.IDLE);
-    setCurrentPersona('CHLOE');
+    setCurrentPersona('SERVICE');
     setTranscriptions([]);
   }, []);
 
@@ -181,8 +181,8 @@ const VoiceAgent: React.FC = () => {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-4xl md:text-5xl lg:text-7xl font-black text-navy mb-6 md:mb-8 tracking-tighter leading-tight">Experience the AI Dispatcher Live</h2>
             <p className="text-xl md:text-2xl text-slate-800 font-bold max-w-2xl mx-auto leading-relaxed">
-              Test our specialized safety logic. Mention a <span className="text-red-600 font-black">"gas leak"</span> to trigger Sam's emergency protocol, 
-              or ask about <span className="text-orange-600 font-black">"rebates"</span> for Chloe's qualification workflow.
+              Test our specialized safety logic. Mention a <span className="text-red-600 font-black">"gas leak"</span> to trigger the emergency protocol, 
+              or ask about <span className="text-orange-600 font-black">"rebates"</span> for the service qualification workflow.
             </p>
           </div>
 
@@ -201,13 +201,13 @@ const VoiceAgent: React.FC = () => {
                    STATUS: {status}
                 </div>
                 {status === DispatchStatus.ACTIVE ? (
-                  <div className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-xl ${currentPersona === 'SAM' ? 'bg-red-600 border-red-500 text-white shadow-[0_0_30px_rgba(239,68,68,0.4)]' : 'bg-green-600 border-green-500 text-white shadow-[0_0_30px_rgba(34,197,94,0.4)]'}`}>
+                  <div className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-xl ${currentPersona === 'EMERGENCY' ? 'bg-red-600 border-red-500 text-white shadow-[0_0_30px_rgba(239,68,68,0.4)]' : 'bg-green-600 border-green-500 text-white shadow-[0_0_30px_rgba(34,197,94,0.4)]'}`}>
                     <span className={`w-3 h-3 rounded-full bg-white animate-ping`}></span>
-                    AGENT: {currentPersona}
+                    ROLE: {currentPersona === 'EMERGENCY' ? 'EMERGENCY SPECIALIST' : 'SERVICE AGENT'}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 border-slate-700 text-slate-600 bg-transparent">
-                    AGENT: STANDBY
+                    ROLE: STANDBY
                   </div>
                 )}
               </div>
@@ -244,11 +244,11 @@ const VoiceAgent: React.FC = () => {
                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
                      <div className="flex items-center justify-center gap-3 mb-4">
                         <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border-2 ${currentMsg.speaker === 'agent' ? 'border-orange-500 text-orange-400 bg-orange-500/10' : 'border-white text-white bg-white/10'}`}>
-                          {currentMsg.speaker === 'agent' ? currentPersona : 'CUSTOMER'}
+                          {currentMsg.speaker === 'agent' ? (currentPersona === 'EMERGENCY' ? 'EMERGENCY SPECIALIST' : 'SERVICE AGENT') : 'CUSTOMER'}
                         </span>
                         <div className="h-[2px] w-12 bg-white/10"></div>
                      </div>
-                     <p className={`text-2xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tighter drop-shadow-2xl transition-colors duration-300 ${currentPersona === 'SAM' && currentMsg.speaker === 'agent' ? 'text-red-400' : 'text-white'}`}>
+                     <p className={`text-2xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tighter drop-shadow-2xl transition-colors duration-300 ${currentPersona === 'EMERGENCY' && currentMsg.speaker === 'agent' ? 'text-red-400' : 'text-white'}`}>
                        "{currentMsg.text}"
                      </p>
                    </div>

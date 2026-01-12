@@ -7,8 +7,8 @@ import Footer from './components/Footer';
 
 const App: React.FC = () => {
   // Global interceptor for all internal anchor links (#)
-  // This prevents browser navigation errors in certain environments and 
-  // ensures smooth scrolling with correct offsets for the fixed header.
+  // This prevents browser navigation errors in certain environments (like blob URLs/sandboxes)
+  // and ensures smooth scrolling with correct offsets for the fixed header.
   useEffect(() => {
     const handleInternalLinks = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -33,8 +33,8 @@ const App: React.FC = () => {
             behavior: 'smooth'
           });
 
-          // Update URL hash without triggering a jump
-          window.history.pushState(null, '', `#${id}`);
+          // Note: Removed window.history.pushState here to prevent SecurityError 
+          // in restricted origins/blob URL environments.
         }
       }
     };

@@ -26,7 +26,6 @@ const VoiceAgent: React.FC = () => {
   const scriptProcessorRef = useRef<ScriptProcessorNode | null>(null);
 
   const addTranscription = (speaker: 'user' | 'agent', text: string) => {
-    // Basic persona detection logic for UI feedback
     if (speaker === 'agent') {
       const lowerText = text.toLowerCase();
       if (lowerText.includes('sam') || lowerText.includes('emergency') || lowerText.includes('urgent')) {
@@ -174,97 +173,78 @@ const VoiceAgent: React.FC = () => {
 
   return (
     <section id="demo" className="py-32 bg-white relative overflow-hidden">
-      {/* HUD Marker */}
-      <div className="absolute top-12 right-12 hidden lg:block">
-        <div className="bg-slate-100 border-2 border-slate-300 rounded-2xl p-5 text-xs text-slate-500 font-black font-mono shadow-sm">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-            VAPI_WEB_WIDGET_PLACEHOLDER [OFF]
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-            GEMINI_LIVE_NATIVE [ACTIVE]
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-black text-navy mb-6 tracking-tight">Experience the AI Dispatcher Live</h2>
-            <p className="text-xl text-slate-700 font-bold max-w-2xl mx-auto leading-relaxed">
-              Test our specialized safety logic. Mention a <strong>"gas leak"</strong> to trigger Sam's emergency protocol, 
-              or ask about <strong>"rebates"</strong> for Chloe's qualification workflow.
+            <h2 className="text-6xl font-black text-navy mb-8 tracking-tight">Experience the AI Dispatcher Live</h2>
+            <p className="text-2xl text-slate-800 font-extrabold max-w-2xl mx-auto leading-relaxed">
+              Test our specialized safety logic. Mention a <span className="text-red-600">"gas leak"</span> to trigger Sam's emergency protocol, 
+              or ask about <span className="text-orange-600">"rebates"</span> for Chloe's qualification workflow.
             </p>
           </div>
 
-          <div className="bg-navy rounded-[3rem] p-10 md:p-20 shadow-2xl relative overflow-hidden border-4 border-white/10">
-            {/* Visualizer Ring - Larger and more defined */}
+          <div className="bg-navy rounded-[4rem] p-12 md:p-24 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] relative overflow-hidden border-8 border-white/5">
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-               <div className={`transition-all duration-700 w-[40rem] h-[40rem] border-2 border-orange-500/10 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
-               <div className={`transition-all duration-1000 w-[50rem] h-[50rem] border border-orange-500/5 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
+               <div className={`transition-all duration-700 w-[45rem] h-[45rem] border-4 border-orange-500/20 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
+               <div className={`transition-all duration-1000 w-[55rem] h-[55rem] border-2 border-orange-500/10 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
             </div>
 
             <div className="relative z-10 flex flex-col items-center">
-              {/* Status Header */}
-              <div className="flex flex-wrap justify-center items-center gap-4 mb-14">
-                <div className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest border-2 transition-all shadow-lg ${status === DispatchStatus.ACTIVE ? 'bg-orange-500 border-orange-400 text-white' : 'bg-transparent border-slate-700 text-slate-500'}`}>
-                  SYSTEM: {status}
+              <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
+                <div className={`px-8 py-3 rounded-full text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-2xl ${status === DispatchStatus.ACTIVE ? 'bg-orange-500 border-orange-400 text-white' : 'bg-transparent border-slate-700 text-slate-500'}`}>
+                  STATUS: {status}
                 </div>
                 {status === DispatchStatus.ACTIVE && (
-                  <div className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest border-2 border-white/30 text-white flex items-center gap-3 bg-white/5 shadow-lg`}>
-                    <span className={`w-2.5 h-2.5 rounded-full ${currentPersona === 'SAM' ? 'bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.8)]'}`}></span>
+                  <div className={`px-8 py-3 rounded-full text-sm font-black uppercase tracking-[0.2em] border-4 border-white/40 text-white flex items-center gap-4 bg-white/10 shadow-2xl`}>
+                    <span className={`w-4 h-4 rounded-full ${currentPersona === 'SAM' ? 'bg-red-500 animate-pulse shadow-[0_0_15px_rgba(239,68,68,1)]' : 'bg-green-400 shadow-[0_0_15px_rgba(74,222,128,1)]'}`}></span>
                     ACTIVE AGENT: {currentPersona}
                   </div>
                 )}
               </div>
 
-              {/* Central Audio Orbit */}
-              <div className="relative mb-16">
-                <div className={`w-40 h-40 rounded-full bg-slate-900 flex items-center justify-center transition-all duration-500 border-4 border-white/5 ${status === DispatchStatus.ACTIVE ? 'shadow-[0_0_80px_-10px_rgba(249,115,22,0.6)] scale-110' : ''}`}>
+              <div className="relative mb-20">
+                <div className={`w-48 h-48 rounded-full bg-slate-900 flex items-center justify-center transition-all duration-500 border-8 border-white/10 ${status === DispatchStatus.ACTIVE ? 'shadow-[0_0_100px_-10px_rgba(249,115,22,0.8)] scale-110' : ''}`}>
                   {status === DispatchStatus.ACTIVE ? (
-                    <div className="flex gap-2 items-end h-12">
-                      {[1,2,3,4,5,6].map(i => (
-                        <div key={i} className="w-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.12}s`, height: `${Math.random() * 100}%` }}></div>
+                    <div className="flex gap-2.5 items-end h-16">
+                      {[1,2,3,4,5,6,7].map(i => (
+                        <div key={i} className="w-2.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.15}s`, height: `${Math.random() * 100}%` }}></div>
                       ))}
                     </div>
                   ) : (
-                    <svg className="w-16 h-16 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    <svg className="w-20 h-20 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                   )}
                 </div>
               </div>
 
-              {/* Dynamic Subtitle - Bolder font */}
-              <div className="text-center mb-14 h-24 max-w-2xl px-4">
-                 {status === DispatchStatus.IDLE && <p className="text-slate-400 text-xl font-bold">System standby. Click below to begin the official pilot simulation.</p>}
-                 {status === DispatchStatus.CONNECTING && <p className="text-orange-400 text-xl font-black animate-pulse tracking-tight uppercase">Establishing GTA Dispatch Node Link...</p>}
+              <div className="text-center mb-16 h-32 max-w-3xl px-6 flex flex-col justify-center">
+                 {status === DispatchStatus.IDLE && <p className="text-slate-400 text-2xl font-black italic tracking-tight uppercase opacity-60">System Standby // Press to Launch</p>}
+                 {status === DispatchStatus.CONNECTING && <p className="text-orange-500 text-3xl font-black animate-pulse tracking-tighter uppercase">Initializing GTA Dispatch Uplink...</p>}
                  {status === DispatchStatus.ACTIVE && transcriptions.length > 0 && (
-                   <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                     <span className="text-orange-400 font-black uppercase text-sm block mb-3 tracking-widest drop-shadow-sm">{transcriptions[transcriptions.length-1].speaker}:</span>
-                     <p className="text-white text-2xl font-black leading-tight tracking-tight">
+                   <div className="animate-in fade-in zoom-in duration-500">
+                     <span className="text-orange-500 font-black uppercase text-base block mb-4 tracking-[0.3em] drop-shadow-lg">{transcriptions[transcriptions.length-1].speaker}:</span>
+                     <p className="text-white text-3xl md:text-4xl font-black leading-tight tracking-tighter drop-shadow-xl">
                        "{transcriptions[transcriptions.length-1].text}"
                      </p>
                    </div>
                  )}
               </div>
 
-              {/* Controls - Visibly much clearer */}
-              <div className="flex flex-col sm:flex-row gap-6 w-full justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-8 w-full justify-center items-center">
                 {status === DispatchStatus.IDLE || status === DispatchStatus.ERROR ? (
                   <button 
                     onClick={startSession}
-                    className="w-full sm:w-auto px-16 py-7 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-2xl transition-all shadow-2xl shadow-orange-500/40 uppercase tracking-wide text-2xl flex items-center justify-center gap-4 hover:scale-105 active:scale-95 ring-4 ring-orange-500/20 border-t-4 border-orange-400"
+                    className="w-full sm:w-auto px-16 py-8 bg-orange-500 hover:bg-orange-400 text-white font-black rounded-3xl transition-all shadow-[0_25px_50px_-10px_rgba(249,115,22,0.8)] uppercase tracking-[0.1em] text-3xl flex items-center justify-center gap-6 hover:scale-105 active:scale-95 border-b-8 border-orange-700"
                   >
                     Launch Pilot Dispatcher
-                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                   </button>
                 ) : (
-                  <div className="flex gap-6 w-full sm:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-8 w-full sm:w-auto">
                     <button 
                       onClick={() => setIsMuted(!isMuted)}
-                      className={`flex-1 sm:flex-none p-7 rounded-2xl border-4 transition-all shadow-xl hover:scale-105 ${isMuted ? 'bg-red-600 border-red-500 text-white shadow-red-900/40' : 'bg-white/5 border-white/20 text-white hover:bg-white/10'}`}
-                      title={isMuted ? "Unmute Microphone" : "Mute Microphone"}
+                      className={`px-12 py-8 rounded-3xl border-4 transition-all shadow-2xl hover:scale-105 flex items-center justify-center gap-4 text-2xl font-black uppercase ${isMuted ? 'bg-red-600 border-red-500 text-white shadow-red-900/40' : 'bg-white/10 border-white/30 text-white hover:bg-white/20'}`}
                     >
+                      {isMuted ? 'Unmute' : 'Mute'}
                       {isMuted ? (
                         <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.17l5.98 6zM4.41 2.86L3 4.27l6 6V11c0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c1.22-.17 2.36-.67 3.3-1.42l2.43 2.43 1.41-1.41L4.41 2.86z"></path></svg>
                       ) : (
@@ -273,7 +253,7 @@ const VoiceAgent: React.FC = () => {
                     </button>
                     <button 
                       onClick={stopSession}
-                      className="flex-1 sm:flex-none px-12 py-7 bg-white text-navy font-black rounded-2xl hover:bg-slate-100 transition-all uppercase tracking-wide text-xl shadow-xl hover:scale-105 active:scale-95"
+                      className="px-16 py-8 bg-white text-navy font-black rounded-3xl hover:bg-slate-100 transition-all uppercase tracking-[0.1em] text-2xl shadow-2xl hover:scale-105 active:scale-95 border-b-8 border-slate-300"
                     >
                       End Connection
                     </button>
@@ -282,8 +262,7 @@ const VoiceAgent: React.FC = () => {
               </div>
             </div>
 
-            {/* Visual HUD line */}
-            <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-orange-500/30 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
           </div>
         </div>
       </div>

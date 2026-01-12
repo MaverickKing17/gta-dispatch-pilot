@@ -83,7 +83,9 @@ const VoiceAgent: React.FC = () => {
   const startSession = async () => {
     try {
       setStatus(DispatchStatus.CONNECTING);
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      // Use the standardized environment variable
+      const apiKey = (process.env as any).VAPI_PUBLIC_KEY || process.env.API_KEY;
+      const ai = new GoogleGenAI({ apiKey });
       
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;

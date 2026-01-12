@@ -9,7 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     // Essential shim to prevent crashes in environments without process.env
-    window.process = window.process || { env: { API_KEY: "0b4a6b67-3152-40bb-b29e-8272cfd98b3a" } };
+    // We use VAPI_PUBLIC_KEY for the Vapi-specific key and API_KEY as a generic fallback for GenAI
+    const key = "0b4a6b67-3152-40bb-b29e-8272cfd98b3a";
+    window.process = window.process || { 
+      env: { 
+        VAPI_PUBLIC_KEY: key,
+        API_KEY: key 
+      } 
+    };
   </script>
   <style>
     body {

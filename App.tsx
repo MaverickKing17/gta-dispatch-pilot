@@ -6,7 +6,6 @@ import VoiceAgent from './components/VoiceAgent.tsx';
 import Footer from './components/Footer.tsx';
 
 const App: React.FC = () => {
-  // Global interceptor for all internal anchor links (#)
   useEffect(() => {
     const handleInternalLinks = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -19,7 +18,6 @@ const App: React.FC = () => {
         const element = document.getElementById(id);
         if (element) {
           e.preventDefault();
-          
           element.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
@@ -33,8 +31,8 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
-      <nav className="fixed top-0 w-full z-50 bg-navy/95 backdrop-blur-2xl border-b-4 border-white/10 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.5)]">
+    <div className="min-h-screen bg-navy text-white selection:bg-orange-500 selection:text-white">
+      <nav className="fixed top-0 w-full z-50 bg-navy/95 backdrop-blur-3xl border-b-4 border-white/10 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.5)]">
         <div className="container mx-auto px-6 h-28 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="w-16 h-12 bg-orange-500 rounded-2xl flex items-center justify-center font-black text-white text-base shadow-2xl shadow-orange-500/40">GTA</div>
@@ -55,6 +53,7 @@ const App: React.FC = () => {
       </nav>
 
       <main>
+        {/* Main layout wrapper */}
         <Hero />
         <Overview />
         <VoiceAgent />

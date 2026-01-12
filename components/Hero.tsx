@@ -4,16 +4,16 @@ import React from 'react';
 const Hero: React.FC = () => {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-navy">
-      {/* High-End Background Image with Overlay */}
+      {/* High-End Background Image with Adjusted Filters for Clarity */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ 
           backgroundImage: `url('https://i.ibb.co/dw5Wh8HD/hunyuan-image-3-0-a-Replace-the-current.png')`,
-          filter: 'brightness(0.3) contrast(1.2)'
+          filter: 'brightness(0.55) contrast(1.1) saturate(1.1)'
         }}
       >
-        {/* Darker Overlay for maximum text punch */}
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/95 via-navy/60 to-navy"></div>
+        {/* Adjusted Overlay for better image visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/30 to-navy/90"></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
@@ -21,11 +21,12 @@ const Hero: React.FC = () => {
           <span className="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></span>
           GTA Service Dispatch Pilot v2.5
         </div>
-        <h1 className="text-6xl lg:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+        {/* Smaller font size as requested */}
+        <h1 className="text-5xl lg:text-7xl font-black text-white mb-8 leading-[1.1] tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
           The Future of <br />
-          <span className="text-orange-500 underline decoration-orange-500/30">After-Hours Dispatch.</span>
+          <span className="text-orange-500 underline decoration-orange-500/30">After-Hours Dispatching.</span>
         </h1>
-        <p className="text-xl md:text-3xl text-slate-100 max-w-4xl mx-auto mb-14 font-bold leading-relaxed drop-shadow-[0_5px_15px_rgba(0,0,0,0.6)]">
+        <p className="text-lg md:text-2xl text-slate-100 max-w-4xl mx-auto mb-14 font-bold leading-relaxed drop-shadow-[0_5px_15px_rgba(0,0,0,0.6)]">
           The first AI safety-compliance lab for GTA HVAC operators. 
           Scaling <span className="text-orange-400 font-extrabold">Emergency Response</span> and <span className="text-orange-400 font-extrabold">Rebate Revenue</span> across Ontario.
         </p>

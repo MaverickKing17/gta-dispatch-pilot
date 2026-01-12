@@ -28,17 +28,17 @@ const VoiceAgent: React.FC = () => {
   const addTranscription = (speaker: 'user' | 'agent', text: string) => {
     if (speaker === 'agent') {
       const lowerText = text.toLowerCase();
-      if (lowerText.includes('sam') || lowerText.includes('emergency') || lowerText.includes('urgent')) {
+      if (lowerText.includes('sam') || lowerText.includes('emergency') || lowerText.includes('urgent') || lowerText.includes('911')) {
         setCurrentPersona('SAM');
-      } else if (lowerText.includes('chloe') || lowerText.includes('rebate') || lowerText.includes('welcome')) {
+      } else if (lowerText.includes('chloe') || lowerText.includes('rebate') || lowerText.includes('welcome') || lowerText.includes('hi')) {
         setCurrentPersona('CHLOE');
       }
     }
 
-    setTranscriptions(prev => [
-      ...prev.slice(-5),
-      { speaker, text, timestamp: new Date() }
-    ]);
+    setTranscriptions(prev => {
+      const newItems = [...prev, { speaker, text, timestamp: new Date() }];
+      return newItems.slice(-3); // Keep only the most recent 3 for clarity
+    });
   };
 
   const stopSession = useCallback(() => {
@@ -58,6 +58,7 @@ const VoiceAgent: React.FC = () => {
     sourcesRef.current.clear();
     setStatus(DispatchStatus.IDLE);
     setCurrentPersona('CHLOE');
+    setTranscriptions([]);
   }, []);
 
   const startSession = async () => {
@@ -171,91 +172,116 @@ const VoiceAgent: React.FC = () => {
     }
   };
 
+  const currentMsg = transcriptions[transcriptions.length - 1];
+
   return (
-    <section id="demo" className="py-32 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-6">
+    <section id="demo" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl lg:text-7xl font-black text-navy mb-8 tracking-tighter leading-tight">Experience the AI Dispatcher Live</h2>
-            <p className="text-2xl text-slate-800 font-bold max-w-2xl mx-auto leading-relaxed">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black text-navy mb-6 md:mb-8 tracking-tighter leading-tight">Experience the AI Dispatcher Live</h2>
+            <p className="text-xl md:text-2xl text-slate-800 font-bold max-w-2xl mx-auto leading-relaxed">
               Test our specialized safety logic. Mention a <span className="text-red-600 font-black">"gas leak"</span> to trigger Sam's emergency protocol, 
               or ask about <span className="text-orange-600 font-black">"rebates"</span> for Chloe's qualification workflow.
             </p>
           </div>
 
-          <div className="bg-navy rounded-[4rem] p-12 md:p-24 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] relative overflow-hidden border-8 border-white/5">
+          <div className="bg-navy rounded-[2rem] md:rounded-[4rem] p-6 md:p-16 lg:p-24 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] relative overflow-hidden border-4 md:border-8 border-white/5">
+            {/* Ambient Background animations */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-               <div className={`transition-all duration-700 w-[45rem] h-[45rem] border-4 border-orange-500/20 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
-               <div className={`transition-all duration-1000 w-[55rem] h-[55rem] border-2 border-orange-500/10 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
+               <div className={`transition-all duration-700 w-[30rem] md:w-[45rem] h-[30rem] md:h-[45rem] border-4 border-orange-500/20 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
+               <div className={`transition-all duration-1000 w-[40rem] md:w-[55rem] h-[40rem] md:h-[55rem] border-2 border-orange-500/10 rounded-full ${status === DispatchStatus.ACTIVE ? 'scale-125 opacity-100' : 'scale-100 opacity-0'}`}></div>
             </div>
 
             <div className="relative z-10 flex flex-col items-center">
-              <div className="flex flex-wrap justify-center items-center gap-6 mb-16">
-                <div className={`px-8 py-3 rounded-full text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-2xl ${status === DispatchStatus.ACTIVE ? 'bg-orange-500 border-orange-400 text-white' : 'bg-transparent border-slate-700 text-slate-500'}`}>
-                  STATUS: {status}
+              {/* Status & Agent Indicators */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-12 md:mb-16">
+                <div className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-xl ${status === DispatchStatus.ACTIVE ? 'bg-orange-500 border-orange-400 text-white' : 'bg-transparent border-slate-700 text-slate-500'}`}>
+                   <span className={`w-3 h-3 rounded-full ${status === DispatchStatus.ACTIVE ? 'bg-white animate-pulse' : 'bg-slate-700'}`}></span>
+                   STATUS: {status}
                 </div>
-                {status === DispatchStatus.ACTIVE && (
-                  <div className={`px-8 py-3 rounded-full text-sm font-black uppercase tracking-[0.2em] border-4 border-white/40 text-white flex items-center gap-4 bg-white/10 shadow-2xl`}>
-                    <span className={`w-4 h-4 rounded-full ${currentPersona === 'SAM' ? 'bg-red-500 animate-pulse shadow-[0_0_15px_rgba(239,68,68,1)]' : 'bg-green-400 shadow-[0_0_15px_rgba(74,222,128,1)]'}`}></span>
-                    ACTIVE AGENT: {currentPersona}
+                {status === DispatchStatus.ACTIVE ? (
+                  <div className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-xl ${currentPersona === 'SAM' ? 'bg-red-600 border-red-500 text-white shadow-[0_0_30px_rgba(239,68,68,0.4)]' : 'bg-green-600 border-green-500 text-white shadow-[0_0_30px_rgba(34,197,94,0.4)]'}`}>
+                    <span className={`w-3 h-3 rounded-full bg-white animate-ping`}></span>
+                    AGENT: {currentPersona}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 border-slate-700 text-slate-600 bg-transparent">
+                    AGENT: STANDBY
                   </div>
                 )}
               </div>
 
-              <div className="relative mb-20">
-                <div className={`w-48 h-48 rounded-full bg-slate-900 flex items-center justify-center transition-all duration-500 border-8 border-white/10 ${status === DispatchStatus.ACTIVE ? 'shadow-[0_0_100px_-10px_rgba(249,115,22,0.8)] scale-110' : ''}`}>
+              {/* Visualizer Orbit */}
+              <div className="relative mb-12 md:mb-20">
+                <div className={`w-40 h-40 md:w-48 md:h-48 rounded-full bg-slate-900 flex items-center justify-center transition-all duration-500 border-4 md:border-8 border-white/10 ${status === DispatchStatus.ACTIVE ? 'shadow-[0_0_100px_-10px_rgba(249,115,22,0.8)] scale-110' : ''}`}>
                   {status === DispatchStatus.ACTIVE ? (
                     <div className="flex gap-2.5 items-end h-16">
                       {[1,2,3,4,5,6,7].map(i => (
-                        <div key={i} className="w-2.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.15}s`, height: `${Math.random() * 100}%` }}></div>
+                        <div key={i} className="w-2.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.15}s`, height: `${30 + Math.random() * 70}%` }}></div>
                       ))}
                     </div>
                   ) : (
-                    <svg className="w-20 h-20 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    <svg className="w-16 h-16 md:w-20 md:h-20 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                   )}
                 </div>
               </div>
 
-              <div className="text-center mb-16 h-32 max-w-3xl px-6 flex flex-col justify-center">
-                 {status === DispatchStatus.IDLE && <p className="text-slate-400 text-2xl font-black italic tracking-tight uppercase opacity-60">System Standby // Press to Launch</p>}
-                 {status === DispatchStatus.CONNECTING && <p className="text-orange-500 text-3xl font-black animate-pulse tracking-tighter uppercase">Initializing GTA Dispatch Uplink...</p>}
-                 {status === DispatchStatus.ACTIVE && transcriptions.length > 0 && (
-                   <div className="animate-in fade-in zoom-in duration-500">
-                     <span className="text-orange-500 font-black uppercase text-base block mb-4 tracking-[0.3em] drop-shadow-lg">{transcriptions[transcriptions.length-1].speaker}:</span>
-                     <p className="text-white text-3xl md:text-4xl font-black leading-tight tracking-tighter drop-shadow-xl">
-                       "{transcriptions[transcriptions.length-1].text}"
+              {/* Enhanced Transcription Display */}
+              <div className="w-full max-w-4xl px-4 mb-16 h-48 md:h-40 flex flex-col justify-center items-center text-center">
+                 {!currentMsg && status === DispatchStatus.IDLE && (
+                   <p className="text-slate-500 text-xl md:text-2xl font-black italic tracking-widest uppercase opacity-40">System Idle // Secure Line Ready</p>
+                 )}
+                 {status === DispatchStatus.CONNECTING && (
+                   <div className="flex flex-col items-center gap-4">
+                     <p className="text-orange-500 text-2xl md:text-3xl font-black animate-pulse tracking-tighter uppercase">Initializing GTA Dispatch Node...</p>
+                     <div className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
+                       <div className="w-1/2 h-full bg-orange-500 animate-loading-bar"></div>
+                     </div>
+                   </div>
+                 )}
+                 {status === DispatchStatus.ACTIVE && currentMsg && (
+                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
+                     <div className="flex items-center justify-center gap-3 mb-4">
+                        <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border-2 ${currentMsg.speaker === 'agent' ? 'border-orange-500 text-orange-400 bg-orange-500/10' : 'border-white text-white bg-white/10'}`}>
+                          {currentMsg.speaker === 'agent' ? currentPersona : 'CUSTOMER'}
+                        </span>
+                        <div className="h-[2px] w-12 bg-white/10"></div>
+                     </div>
+                     <p className={`text-2xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tighter drop-shadow-2xl transition-colors duration-300 ${currentPersona === 'SAM' && currentMsg.speaker === 'agent' ? 'text-red-400' : 'text-white'}`}>
+                       "{currentMsg.text}"
                      </p>
                    </div>
                  )}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-8 w-full justify-center items-center">
+              {/* Action Controls */}
+              <div className="flex flex-col sm:flex-row gap-6 md:gap-8 w-full justify-center items-center">
                 {status === DispatchStatus.IDLE || status === DispatchStatus.ERROR ? (
                   <button 
                     onClick={startSession}
-                    className="w-full sm:w-auto px-16 py-8 bg-orange-500 hover:bg-orange-400 text-white font-black rounded-3xl transition-all shadow-[0_25px_50px_-10px_rgba(249,115,22,0.8)] uppercase tracking-[0.1em] text-3xl flex items-center justify-center gap-6 hover:scale-105 active:scale-95 border-b-8 border-orange-700"
+                    className="w-full sm:w-auto px-12 md:px-16 py-6 md:py-8 bg-orange-500 hover:bg-orange-400 text-white font-black rounded-2xl md:rounded-3xl transition-all shadow-[0_25px_50px_-10px_rgba(249,115,22,0.8)] hover:shadow-[0_35px_60px_-10px_rgba(249,115,22,1)] uppercase tracking-[0.1em] text-2xl md:text-3xl flex items-center justify-center gap-6 hover:scale-105 active:scale-95 border-b-8 border-orange-700 hover:border-orange-600"
                   >
-                    Launch Pilot Dispatcher
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Launch Simulation
+                    <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                   </button>
                 ) : (
-                  <div className="flex flex-col sm:flex-row gap-8 w-full sm:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-4 md:gap-8 w-full sm:w-auto">
                     <button 
                       onClick={() => setIsMuted(!isMuted)}
-                      className={`px-12 py-8 rounded-3xl border-4 transition-all shadow-2xl hover:scale-105 flex items-center justify-center gap-4 text-2xl font-black uppercase ${isMuted ? 'bg-red-600 border-red-500 text-white shadow-red-900/40' : 'bg-white/10 border-white/30 text-white hover:bg-white/20'}`}
+                      className={`px-8 md:px-12 py-6 md:py-8 rounded-2xl md:rounded-3xl border-4 transition-all shadow-2xl hover:scale-105 flex items-center justify-center gap-4 text-xl md:text-2xl font-black uppercase ${isMuted ? 'bg-red-600 border-red-500 text-white shadow-red-900/40 hover:bg-red-500 hover:shadow-red-500/50' : 'bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 hover:shadow-white/20'}`}
                     >
-                      {isMuted ? 'Unmute' : 'Mute'}
                       {isMuted ? (
-                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.17l5.98 6zM4.41 2.86L3 4.27l6 6V11c0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c1.22-.17 2.36-.67 3.3-1.42l2.43 2.43 1.41-1.41L4.41 2.86z"></path></svg>
+                        <>UNMUTE <svg className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.17l5.98 6zM4.41 2.86L3 4.27l6 6V11c0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c1.22-.17 2.36-.67 3.3-1.42l2.43 2.43 1.41-1.41L4.41 2.86z"></path></svg></>
                       ) : (
-                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"></path><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"></path></svg>
+                        <>MUTE <svg className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"></path><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"></path></svg></>
                       )}
                     </button>
                     <button 
                       onClick={stopSession}
-                      className="px-16 py-8 bg-white text-navy font-black rounded-3xl hover:bg-slate-100 transition-all uppercase tracking-[0.1em] text-2xl shadow-2xl hover:scale-105 active:scale-95 border-b-8 border-slate-300"
+                      className="px-12 md:px-16 py-6 md:py-8 bg-white text-navy font-black rounded-2xl md:rounded-3xl hover:bg-slate-50 transition-all uppercase tracking-[0.1em] text-xl md:text-2xl shadow-2xl hover:scale-105 active:scale-95 border-b-8 border-slate-300 hover:border-slate-400 hover:shadow-[0_25px_50px_-5px_rgba(255,255,255,0.3)]"
                     >
-                      End Connection
+                      Disconnect
                     </button>
                   </div>
                 )}
@@ -266,6 +292,16 @@ const VoiceAgent: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <style>{`
+        @keyframes loading-bar {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+        .animate-loading-bar {
+          animation: loading-bar 1.5s infinite linear;
+        }
+      `}</style>
     </section>
   );
 };

@@ -1,9 +1,9 @@
 
 import React, { useEffect } from 'react';
-import Hero from './components/Hero';
-import Overview from './components/Overview';
-import VoiceAgent from './components/VoiceAgent';
-import Footer from './components/Footer';
+import Hero from './components/Hero.tsx';
+import Overview from './components/Overview.tsx';
+import VoiceAgent from './components/VoiceAgent.tsx';
+import Footer from './components/Footer.tsx';
 
 const App: React.FC = () => {
   // Global interceptor for all internal anchor links (#)
@@ -20,9 +20,6 @@ const App: React.FC = () => {
         if (element) {
           e.preventDefault();
           
-          // Using a more modern approach: find the element and scroll it into view.
-          // The scroll offset is handled by CSS (scroll-margin-top) on the target sections.
-          // This is generally more robust than manual pixel calculation in JS.
           element.scrollIntoView({
             behavior: 'smooth',
             block: 'start'

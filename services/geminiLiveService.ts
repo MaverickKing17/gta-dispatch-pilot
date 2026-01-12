@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, LiveServerMessage, Modality, Type, FunctionDeclaration } from '@google/genai';
-import { SYSTEM_INSTRUCTION } from '../constants';
+import { SYSTEM_INSTRUCTION } from '../constants.tsx';
 
 export const controlDispatchFunctionDeclaration: FunctionDeclaration = {
   name: 'record_dispatch',

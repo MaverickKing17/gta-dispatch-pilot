@@ -7,9 +7,9 @@ import {
   decodeAudioData, 
   controlDispatchFunctionDeclaration,
   encode
-} from '../services/geminiLiveService';
-import { DispatchStatus, TranscriptionItem } from '../types';
-import { SYSTEM_INSTRUCTION, COLORS, WEBHOOK_URL, BOOKING_URL } from '../constants';
+} from '../services/geminiLiveService.ts';
+import { DispatchStatus, TranscriptionItem } from '../types.ts';
+import { SYSTEM_INSTRUCTION, COLORS, WEBHOOK_URL, BOOKING_URL } from '../constants.tsx';
 
 const VoiceAgent: React.FC = () => {
   const [status, setStatus] = useState<DispatchStatus>(DispatchStatus.IDLE);
@@ -115,8 +115,7 @@ const VoiceAgent: React.FC = () => {
             setStatus(DispatchStatus.ACTIVE);
             const source = inputCtx.createMediaStreamSource(stream);
             
-            // Connect input to the same analyser (note: across contexts might be tricky, 
-            // but we can use simple volume calc for input in scriptProcessor)
+            // Connect input to the same analyser
             const scriptProcessor = inputCtx.createScriptProcessor(4096, 1, 1);
             scriptProcessorRef.current = scriptProcessor;
 
@@ -124,11 +123,9 @@ const VoiceAgent: React.FC = () => {
               if (isMuted) return;
               const inputData = e.inputBuffer.getChannelData(0);
               
-              // Simple volume detection for visual flair on input
               let sum = 0;
               for(let i=0; i<inputData.length; i++) sum += inputData[i] * inputData[i];
               const rms = Math.sqrt(sum / inputData.length);
-              // Only update volume if output isn't playing (simplified logic)
               if (sourcesRef.current.size === 0) {
                  setVolume(rms * 5); 
               }
@@ -180,7 +177,6 @@ const VoiceAgent: React.FC = () => {
               const source = outputCtx.createBufferSource();
               source.buffer = audioBuffer;
               
-              // Connect output source to analyser for visual feedback
               source.connect(analyserRef.current);
               analyserRef.current.connect(outputCtx.destination);
               
@@ -230,7 +226,6 @@ const VoiceAgent: React.FC = () => {
           </div>
 
           <div className="bg-navy rounded-[2rem] md:rounded-[4rem] p-6 md:p-16 lg:p-24 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] relative overflow-hidden border-4 md:border-8 border-white/5">
-            {/* Ambient Dynamic Orbit Animations */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                <div 
                  className={`transition-all duration-150 w-[30rem] md:w-[45rem] h-[30rem] md:h-[45rem] border-4 border-orange-500/20 rounded-full ${status === DispatchStatus.ACTIVE ? 'opacity-100' : 'opacity-0'}`}
@@ -247,7 +242,6 @@ const VoiceAgent: React.FC = () => {
             </div>
 
             <div className="relative z-10 flex flex-col items-center">
-              {/* Status & Role Indicators */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-12 md:mb-16">
                 <div className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-xl ${status === DispatchStatus.ACTIVE ? 'bg-orange-500 border-orange-400 text-white' : 'bg-transparent border-slate-700 text-slate-500'}`}>
                    <span className={`w-3 h-3 rounded-full ${status === DispatchStatus.ACTIVE ? 'bg-white animate-pulse' : 'bg-slate-700'}`}></span>
@@ -265,7 +259,6 @@ const VoiceAgent: React.FC = () => {
                 )}
               </div>
 
-              {/* Enhanced Visualizer Orbit */}
               <div className="relative mb-12 md:mb-20">
                 <div 
                   className={`w-40 h-40 md:w-48 md:h-48 rounded-full bg-slate-900 flex items-center justify-center transition-all duration-150 border-4 md:border-8 border-white/10 ${status === DispatchStatus.ACTIVE ? 'shadow-[0_0_80px_-5px_rgba(249,115,22,0.6)]' : ''}`}
@@ -290,7 +283,6 @@ const VoiceAgent: React.FC = () => {
                 </div>
               </div>
 
-              {/* Enhanced Transcription Display */}
               <div className="w-full max-w-4xl px-4 mb-16 h-48 md:h-40 flex flex-col justify-center items-center text-center">
                  {!currentMsg && status === DispatchStatus.IDLE && (
                    <p className="text-slate-500 text-xl md:text-2xl font-black italic tracking-widest uppercase opacity-40">System Idle // Secure Line Ready</p>
@@ -318,7 +310,6 @@ const VoiceAgent: React.FC = () => {
                  )}
               </div>
 
-              {/* Action Controls */}
               <div className="flex flex-col sm:flex-row gap-6 md:gap-8 w-full justify-center items-center">
                 {status === DispatchStatus.IDLE || status === DispatchStatus.ERROR ? (
                   <button 

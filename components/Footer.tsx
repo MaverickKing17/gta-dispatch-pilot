@@ -7,8 +7,8 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-16">
           <div className="max-w-2xl">
-            <div className="text-white font-black text-5xl mb-6 tracking-tight">GTA Service Dispatch Pilot</div>
-            <p className="text-2xl font-black text-slate-400 leading-relaxed italic border-l-4 border-orange-500 pl-6">
+            <div className="text-white font-black text-4xl lg:text-5xl mb-6 tracking-tight">GTA Service Dispatch Pilot</div>
+            <p className="text-xl lg:text-2xl font-bold text-slate-400 leading-relaxed italic border-l-4 border-orange-500 pl-6">
               Pioneering the next generation of safe, profitable HVAC operations in the Greater Toronto Area.
             </p>
           </div>

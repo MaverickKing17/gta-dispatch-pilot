@@ -21,24 +21,24 @@ const Hero: React.FC = () => {
           <span className="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></span>
           GTA Service Dispatch Pilot v2.5
         </div>
-        <h1 className="text-6xl md:text-9xl font-black text-white mb-8 leading-[0.9] tracking-tighter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+        <h1 className="text-6xl lg:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
           The Future of <br />
           <span className="text-orange-500 underline decoration-orange-500/30">After-Hours Dispatch.</span>
         </h1>
-        <p className="text-2xl md:text-3xl text-white max-w-4xl mx-auto mb-14 font-bold leading-relaxed drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
+        <p className="text-xl md:text-3xl text-slate-100 max-w-4xl mx-auto mb-14 font-bold leading-relaxed drop-shadow-[0_5px_15px_rgba(0,0,0,0.6)]">
           The first AI safety-compliance lab for GTA HVAC operators. 
-          Scaling <span className="text-orange-400 font-black">Emergency Response</span> and <span className="text-orange-400 font-black">Rebate Revenue</span> across Ontario.
+          Scaling <span className="text-orange-400 font-extrabold">Emergency Response</span> and <span className="text-orange-400 font-extrabold">Rebate Revenue</span> across Ontario.
         </p>
         <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
           <a 
             href="#demo"
-            className="w-full sm:w-auto px-14 py-7 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black transition-all shadow-[0_20px_40px_-10px_rgba(249,115,22,0.6)] hover:shadow-[0_25px_50px_-10px_rgba(249,115,22,0.7)] uppercase tracking-widest text-2xl border-b-4 border-orange-700 active:translate-y-1"
+            className="w-full sm:w-auto px-14 py-7 bg-orange-500 hover:bg-orange-400 text-white rounded-2xl font-black transition-all shadow-[0_20px_40px_-10px_rgba(249,115,22,0.6)] hover:shadow-[0_25px_50px_-10px_rgba(249,115,22,0.7)] uppercase tracking-widest text-2xl border-b-8 border-orange-700 active:translate-y-1 active:border-b-4"
           >
             Launch Dispatch Agent
           </a>
           <a 
             href="#overview"
-            className="w-full sm:w-auto px-14 py-7 bg-white text-navy hover:bg-slate-100 rounded-2xl font-black transition-all uppercase tracking-widest text-2xl shadow-2xl border-b-4 border-slate-300 active:translate-y-1"
+            className="w-full sm:w-auto px-14 py-7 bg-white text-navy hover:bg-slate-100 rounded-2xl font-black transition-all uppercase tracking-widest text-2xl shadow-2xl border-b-8 border-slate-300 active:translate-y-1 active:border-b-4"
           >
             Pilot Details
           </a>

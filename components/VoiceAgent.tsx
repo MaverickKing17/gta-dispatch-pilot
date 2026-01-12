@@ -176,10 +176,10 @@ const VoiceAgent: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-6xl font-black text-navy mb-8 tracking-tight">Experience the AI Dispatcher Live</h2>
-            <p className="text-2xl text-slate-800 font-extrabold max-w-2xl mx-auto leading-relaxed">
-              Test our specialized safety logic. Mention a <span className="text-red-600">"gas leak"</span> to trigger Sam's emergency protocol, 
-              or ask about <span className="text-orange-600">"rebates"</span> for Chloe's qualification workflow.
+            <h2 className="text-5xl lg:text-7xl font-black text-navy mb-8 tracking-tighter leading-tight">Experience the AI Dispatcher Live</h2>
+            <p className="text-2xl text-slate-800 font-bold max-w-2xl mx-auto leading-relaxed">
+              Test our specialized safety logic. Mention a <span className="text-red-600 font-black">"gas leak"</span> to trigger Sam's emergency protocol, 
+              or ask about <span className="text-orange-600 font-black">"rebates"</span> for Chloe's qualification workflow.
             </p>
           </div>
 

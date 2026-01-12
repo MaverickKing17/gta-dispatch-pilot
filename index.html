@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     // Essential shim to prevent crashes in environments without process.env
-    // We use VAPI_PUBLIC_KEY for the Vapi-specific key and API_KEY as a generic fallback for GenAI
     const key = "0b4a6b67-3152-40bb-b29e-8272cfd98b3a";
     window.process = window.process || { 
       env: { 
@@ -50,6 +49,7 @@
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "@google/genai": "https://esm.sh/@google/genai@1.3.0",
+    "@vapi-ai/web": "https://esm.sh/@vapi-ai/web@1.0.33",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }

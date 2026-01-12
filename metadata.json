@@ -1,0 +1,7 @@
+{
+  "name": "GTA Service Dispatch Pilot",
+  "description": "A high-end AI-powered dispatch system for GTA HVAC operators, featuring real-time safety protocols and revenue capture logic.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

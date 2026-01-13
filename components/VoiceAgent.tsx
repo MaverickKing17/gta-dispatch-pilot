@@ -1,11 +1,12 @@
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Vapi from '@vapi-ai/web';
 import { DispatchStatus, TranscriptionItem } from '../types.ts';
-import { VAPI_AGENT_ID, WEBHOOK_URL } from '../constants.tsx';
+import { VAPI_AGENT_ID, SYSTEM_INSTRUCTION } from '../constants.tsx';
 
 const VoiceAgent: React.FC = () => {
   const [status, setStatus] = useState<DispatchStatus>(DispatchStatus.IDLE);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [transcriptions, setTranscriptions] = useState<TranscriptionItem[]>([]);
   const [currentPersona, setCurrentPersona] = useState<'SERVICE' | 'EMERGENCY'>('SERVICE');
   const [volume, setVolume] = useState(0);
@@ -13,58 +14,63 @@ const VoiceAgent: React.FC = () => {
   
   const vapiRef = useRef<any>(null);
 
-  // Initialize Vapi SDK
   useEffect(() => {
     const publicKey = (process.env as any).VAPI_PUBLIC_KEY || "0b4a6b67-3152-40bb-b29e-8272cfd98b3a";
-    vapiRef.current = new Vapi(publicKey);
+    
+    try {
+      vapiRef.current = new Vapi(publicKey);
 
-    vapiRef.current.on('call-start', () => {
-      setStatus(DispatchStatus.ACTIVE);
-    });
+      vapiRef.current.on('call-start', () => {
+        console.log('Vapi: Call successfully started');
+        setStatus(DispatchStatus.ACTIVE);
+        setErrorMessage(null);
+      });
 
-    vapiRef.current.on('call-end', () => {
-      setStatus(DispatchStatus.IDLE);
-      setVolume(0);
-      setTranscriptions([]);
-    });
+      vapiRef.current.on('call-end', () => {
+        console.log('Vapi: Call ended');
+        setStatus(DispatchStatus.IDLE);
+        setVolume(0);
+        setTranscriptions([]);
+      });
 
-    vapiRef.current.on('message', (message: any) => {
-      if (message.type === 'transcript') {
-        const speaker = message.role === 'assistant' ? 'agent' : 'user';
-        const text = message.transcript;
-        
-        if (message.transcriptType === 'final') {
-          setTranscriptions(prev => {
-            const newItems = [...prev, { speaker, text, timestamp: new Date() }];
-            return newItems.slice(-3);
-          });
+      vapiRef.current.on('message', (message: any) => {
+        if (message.type === 'transcript') {
+          const speaker = message.role === 'assistant' ? 'agent' : 'user';
+          const text = message.transcript;
+          
+          if (message.transcriptType === 'final') {
+            setTranscriptions(prev => {
+              const newItems = [...prev, { speaker, text, timestamp: new Date() }];
+              return newItems.slice(-3);
+            });
 
-          // Dynamic Persona Detection
-          if (speaker === 'agent') {
-            const lowerText = text.toLowerCase();
-            if (lowerText.includes('emergency') || lowerText.includes('urgent') || lowerText.includes('safety') || lowerText.includes('911')) {
-              setCurrentPersona('EMERGENCY');
-            } else if (lowerText.includes('rebate') || lowerText.includes('service')) {
-              setCurrentPersona('SERVICE');
+            if (speaker === 'agent') {
+              const lowerText = text.toLowerCase();
+              if (lowerText.includes('emergency') || lowerText.includes('urgent') || lowerText.includes('safety') || lowerText.includes('911')) {
+                setCurrentPersona('EMERGENCY');
+              } else if (lowerText.includes('rebate') || lowerText.includes('service')) {
+                setCurrentPersona('SERVICE');
+              }
             }
           }
         }
-      }
+      });
 
-      if (message.type === 'tool-calls') {
-        // Handle tool calls if necessary
-        console.log('Vapi Tool Call:', message.toolCalls);
-      }
-    });
+      vapiRef.current.on('volume-level', (level: number) => {
+        setVolume(level);
+      });
 
-    vapiRef.current.on('volume-level', (level: number) => {
-      setVolume(level);
-    });
+      vapiRef.current.on('error', (e: any) => {
+        console.error('Vapi SDK Error:', e);
+        const errorText = e.message || 'Connection failed';
+        setErrorMessage(errorText);
+        setStatus(DispatchStatus.ERROR);
+      });
 
-    vapiRef.current.on('error', (e: any) => {
-      console.error('Vapi Error:', e);
-      setStatus(DispatchStatus.ERROR);
-    });
+    } catch (err: any) {
+      console.error('Vapi Initialization Failed:', err);
+      setErrorMessage('Failed to initialize voice engine.');
+    }
 
     return () => {
       vapiRef.current?.stop();
@@ -72,23 +78,46 @@ const VoiceAgent: React.FC = () => {
   }, []);
 
   const startCall = async () => {
+    setErrorMessage(null);
     setStatus(DispatchStatus.CONNECTING);
+    
     try {
-      await vapiRef.current.start(VAPI_AGENT_ID);
-    } catch (err) {
-      console.error('Failed to start Vapi call', err);
+      // Ensure Vapi exists
+      if (!vapiRef.current) {
+        throw new Error("Voice engine not ready.");
+      }
+
+      console.log('Vapi: Requesting call start with Agent ID:', VAPI_AGENT_ID);
+      
+      // Request microphone access explicitly if possible
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Start call with local instructions as override to ensure behavior
+      await vapiRef.current.start(VAPI_AGENT_ID, {
+        variableValues: {
+          systemInstruction: SYSTEM_INSTRUCTION
+        }
+      });
+
+    } catch (err: any) {
+      console.error('Vapi Start Exception:', err);
+      let msg = "Could not start call.";
+      if (err.name === 'NotAllowedError') msg = "Microphone access denied.";
+      if (err.name === 'NotFoundError') msg = "No microphone found.";
+      
+      setErrorMessage(msg);
       setStatus(DispatchStatus.ERROR);
     }
   };
 
   const stopCall = () => {
-    vapiRef.current.stop();
+    vapiRef.current?.stop();
   };
 
   const toggleMute = () => {
     const newMuteState = !isMuted;
     setIsMuted(newMuteState);
-    vapiRef.current.setMuted(newMuteState);
+    vapiRef.current?.setMuted(newMuteState);
   };
 
   const currentMsg = transcriptions[transcriptions.length - 1];
@@ -119,6 +148,13 @@ const VoiceAgent: React.FC = () => {
             </div>
 
             <div className="relative z-10 flex flex-col items-center">
+              {errorMessage && (
+                <div className="w-full max-w-md bg-red-500/20 border-2 border-red-500 text-red-200 px-6 py-4 rounded-2xl mb-8 flex items-center gap-4 animate-in fade-in slide-in-from-top-4">
+                  <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                  <span className="font-black uppercase tracking-widest text-sm">{errorMessage}</span>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-12 md:mb-16">
                 <div className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] border-4 transition-all shadow-xl ${status === DispatchStatus.ACTIVE ? 'bg-orange-500 border-orange-400 text-white' : 'bg-transparent border-slate-700 text-slate-500'}`}>
                    <span className={`w-3 h-3 rounded-full ${status === DispatchStatus.ACTIVE ? 'bg-white animate-pulse' : 'bg-slate-700'}`}></span>
@@ -145,7 +181,7 @@ const VoiceAgent: React.FC = () => {
                    <p className="text-slate-500 text-xl md:text-2xl font-black italic tracking-widest uppercase opacity-40">System Idle // Secure Line Ready</p>
                  )}
                  {status === DispatchStatus.CONNECTING && (
-                   <p className="text-orange-500 text-2xl md:text-3xl font-black animate-pulse tracking-tighter uppercase">Initializing Vapi Node...</p>
+                   <p className="text-orange-500 text-2xl md:text-3xl font-black animate-pulse tracking-tighter uppercase">Initializing Secure Vapi Tunnel...</p>
                  )}
                  {status === DispatchStatus.ACTIVE && currentMsg && (
                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
@@ -157,7 +193,7 @@ const VoiceAgent: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6 md:gap-8 w-full justify-center items-center">
-                {status === DispatchStatus.IDLE || status === DispatchStatus.ERROR ? (
+                {status !== DispatchStatus.ACTIVE && status !== DispatchStatus.CONNECTING ? (
                   <button 
                     onClick={startCall}
                     className="w-full sm:w-auto px-12 md:px-16 py-6 md:py-8 bg-orange-500 hover:bg-orange-400 text-white font-black rounded-2xl md:rounded-3xl transition-all shadow-[0_25px_50px_-10px_rgba(249,115,22,0.8)] uppercase tracking-[0.1em] text-2xl md:text-3xl flex items-center justify-center gap-6 border-b-8 border-orange-700 active:translate-y-1"
@@ -176,7 +212,7 @@ const VoiceAgent: React.FC = () => {
                       onClick={stopCall}
                       className="px-12 md:px-16 py-6 md:py-8 bg-white text-navy font-black rounded-2xl md:rounded-3xl hover:bg-slate-50 transition-all uppercase tracking-[0.1em] text-xl md:text-2xl shadow-2xl border-b-8 border-slate-300 active:translate-y-1"
                     >
-                      Disconnect
+                      {status === DispatchStatus.CONNECTING ? 'CANCEL' : 'DISCONNECT'}
                     </button>
                   </div>
                 )}

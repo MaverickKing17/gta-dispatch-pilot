@@ -2,6 +2,17 @@
 import React from 'react';
 
 const Hero: React.FC = () => {
+  const handleStartInteraction = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Scroll to the demo section
+    const demoSection = document.getElementById('demo');
+    if (demoSection) {
+      demoSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    // Dispatch a custom event to tell VoiceAgent to start the call
+    window.dispatchEvent(new CustomEvent('vapi-start'));
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A192F]">
       {/* Background Image - Set to 'contain' and centered to ensure 100% visibility of the source 2K asset */}
@@ -14,7 +25,7 @@ const Hero: React.FC = () => {
           backgroundColor: '#0A192F'
         }}
       >
-        {/* Softened overlays that protect the image edges and ensure text legibility while preserving the focal points */}
+        {/* Softened overlays that protect the image edges and ensure text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A192F]/40 via-transparent to-[#0A192F]/80"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/20 via-transparent to-[#0A192F]/20"></div>
       </div>
@@ -36,12 +47,12 @@ const Hero: React.FC = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <a 
-            href="#demo"
+          <button 
+            onClick={handleStartInteraction}
             className="w-full sm:w-auto px-12 py-6 bg-orange-500 hover:bg-orange-400 text-white rounded-2xl font-black transition-all shadow-[0_20px_40px_-10px_rgba(249,115,22,0.6)] hover:shadow-[0_25px_50px_-10px_rgba(249,115,22,0.7)] uppercase tracking-widest text-lg md:text-xl border-b-8 border-orange-700 active:translate-y-1 active:border-b-4"
           >
             Launch Dispatch Agent
-          </a>
+          </button>
           <a 
             href="#overview"
             className="w-full sm:w-auto px-12 py-6 bg-white/10 backdrop-blur-xl text-white hover:bg-white/20 rounded-2xl font-black transition-all uppercase tracking-widest text-lg md:text-xl border-2 border-white/20 active:translate-y-1"

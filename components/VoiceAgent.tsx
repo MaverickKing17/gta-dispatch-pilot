@@ -14,6 +14,12 @@ const VoiceAgent: React.FC = () => {
   const [connectionStep, setConnectionStep] = useState('');
   
   const vapiRef = useRef<any>(null);
+  const statusRef = useRef<DispatchStatus>(DispatchStatus.IDLE);
+
+  // Sync ref with state for event listener access
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   useEffect(() => {
     const publicKey = (process.env as any).VAPI_PUBLIC_KEY || "0b4a6b67-3152-40bb-b29e-8272cfd98b3a";
@@ -22,14 +28,12 @@ const VoiceAgent: React.FC = () => {
       vapiRef.current = new Vapi(publicKey);
 
       vapiRef.current.on('call-start', () => {
-        console.log('Vapi: Call successfully started');
         setStatus(DispatchStatus.ACTIVE);
         setErrorMessage(null);
         setConnectionStep('');
       });
 
       vapiRef.current.on('call-end', () => {
-        console.log('Vapi: Call ended');
         setStatus(DispatchStatus.IDLE);
         setVolume(0);
         setTranscriptions([]);
@@ -64,7 +68,6 @@ const VoiceAgent: React.FC = () => {
       });
 
       vapiRef.current.on('error', (e: any) => {
-        console.error('Vapi SDK Error:', e);
         const errorText = e.message || 'Connection failed';
         setErrorMessage(errorText);
         setStatus(DispatchStatus.ERROR);
@@ -72,29 +75,37 @@ const VoiceAgent: React.FC = () => {
       });
 
     } catch (err: any) {
-      console.error('Vapi Initialization Failed:', err);
       setErrorMessage('Failed to initialize voice engine.');
     }
 
+    // Global listener for other orange buttons
+    const handleRemoteStart = () => {
+      if (statusRef.current === DispatchStatus.IDLE) {
+        startCall();
+      }
+    };
+    window.addEventListener('vapi-start', handleRemoteStart);
+
     return () => {
       vapiRef.current?.stop();
+      window.removeEventListener('vapi-start', handleRemoteStart);
     };
   }, []);
 
   const startCall = async () => {
     setErrorMessage(null);
     setStatus(DispatchStatus.CONNECTING);
-    setConnectionStep('Requesting Mic Access...');
+    setConnectionStep('Initializing AI Agent...');
     
     try {
       if (!vapiRef.current) {
         throw new Error("Voice engine not ready.");
       }
 
+      // Pre-check mic to speed up Vapi initialization
       await navigator.mediaDevices.getUserMedia({ audio: true });
-      setConnectionStep('Establishing Secure Connection...');
+      setConnectionStep('Waking Agent Jessica...');
 
-      // Assistant override to ensure Jessica greets immediately
       const assistantOverrides = {
         name: "Jessica - GTA Dispatch",
         firstMessage: "Hello, this is Jessica with the GTA HVAC Dispatch Pilot. How can I help you today?",
@@ -111,10 +122,8 @@ const VoiceAgent: React.FC = () => {
 
     } catch (err: any) {
       console.error('Vapi Start Exception:', err);
-      let msg = "Could not start call.";
-      if (err.name === 'NotAllowedError') msg = "Microphone access denied.";
-      if (err.name === 'NotFoundError') msg = "No microphone found.";
-      
+      let msg = "Interaction failed to start.";
+      if (err.name === 'NotAllowedError') msg = "Please allow microphone access.";
       setErrorMessage(msg);
       setStatus(DispatchStatus.ERROR);
       setConnectionStep('');

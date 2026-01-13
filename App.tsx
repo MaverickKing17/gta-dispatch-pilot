@@ -11,10 +11,13 @@ const App: React.FC = () => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
       
+      // If it's a standard anchor pointing to an ID (excluding our custom orange triggers)
       if (anchor && anchor.getAttribute('href')?.startsWith('#')) {
         const id = anchor.getAttribute('href')?.substring(1);
         if (!id) return;
 
+        // Special handling for demo-related orange buttons is done via onClick in components,
+        // but we handle standard navigation here.
         const element = document.getElementById(id);
         if (element) {
           e.preventDefault();
@@ -30,6 +33,16 @@ const App: React.FC = () => {
     return () => document.removeEventListener('click', handleInternalLinks);
   }, []);
 
+  const handleNavStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const demoSection = document.getElementById('demo');
+    if (demoSection) {
+      demoSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    // Dispatch the same event as the Hero button
+    window.dispatchEvent(new CustomEvent('vapi-start'));
+  };
+
   return (
     <div className="min-h-screen bg-navy text-white selection:bg-orange-500 selection:text-white">
       <nav className="fixed top-0 w-full z-50 bg-navy/95 backdrop-blur-3xl border-b-4 border-white/10 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.5)]">
@@ -40,20 +53,19 @@ const App: React.FC = () => {
           </div>
           <div className="hidden lg:flex gap-10 xl:gap-14 text-white text-lg font-black uppercase tracking-[0.2em]">
             <a href="#overview" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer">Overview</a>
-            <a href="#demo" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer">Voice Demo</a>
+            <button onClick={handleNavStart} className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer uppercase">Voice Demo</button>
             <a href="#safety" className="hover:text-orange-500 transition-all py-2 border-b-4 border-transparent hover:border-orange-500 cursor-pointer">Safety Protocols</a>
           </div>
-          <a 
-            href="#demo"
-            className="px-6 md:px-10 py-4 bg-orange-500 text-white rounded-2xl text-sm md:text-base font-black hover:bg-orange-600 transition-all shadow-[0_15px_30px_-5px_rgba(249,115,22,0.5)] uppercase tracking-widest border-b-4 border-orange-700"
+          <button 
+            onClick={handleNavStart}
+            className="px-6 md:px-10 py-4 bg-orange-500 text-white rounded-2xl text-sm md:text-base font-black hover:bg-orange-600 transition-all shadow-[0_15px_30px_-5px_rgba(249,115,22,0.5)] uppercase tracking-widest border-b-4 border-orange-700 active:translate-y-1 active:border-b-2"
           >
             Access Live Demo
-          </a>
+          </button>
         </div>
       </nav>
 
       <main>
-        {/* Main layout wrapper */}
         <Hero />
         <Overview />
         <VoiceAgent />

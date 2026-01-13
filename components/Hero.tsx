@@ -3,32 +3,35 @@ import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy">
-      {/* Background Image - Adjusted for high clarity */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A192F]">
+      {/* Background Image - Updated to the new high-end URL with cover sizing */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+        className="absolute inset-0 z-0 bg-no-repeat transition-opacity duration-1000"
         style={{ 
-          backgroundImage: `url('https://i.ibb.co/dw5Wh8HD/hunyuan-image-3-0-a-Replace-the-current.png')`,
-          filter: 'brightness(0.65) contrast(1.1) saturate(1.05)'
+          backgroundImage: `url('https://i.ibb.co/spvwtzxb/hunyuan-image-3-0-b-Replace-the-current.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 20%', 
+          filter: 'brightness(0.7) contrast(1.1) saturate(1.1)',
+          backgroundColor: '#0A192F'
         }}
       >
-        {/* Lighter Gradient Overlay for better image visibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/10 to-navy/80"></div>
+        {/* Cinematic Gradient Overlays to ensure text legibility and focus on subject */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#0A192F] via-[#0A192F]/40 to-transparent opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0A192F]/90"></div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 text-center py-20">
+      <div className="container mx-auto px-6 relative z-10 text-center pt-32 pb-20 md:pt-40">
         <div className="inline-flex items-center gap-2 px-6 py-2.5 mb-8 rounded-full border-2 border-orange-500/40 bg-orange-500/20 text-orange-400 text-sm font-black tracking-[0.2em] uppercase backdrop-blur-md shadow-2xl">
           <span className="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></span>
           GTA Service Dispatch Pilot v2.5
         </div>
         
-        {/* Headlines resized for better proportion */}
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white mb-6 leading-[1.1] tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+        <h1 className="text-4xl sm:text-5xl lg:text-8xl font-black text-white mb-6 leading-[1.05] tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
           The Future of <br />
-          <span className="text-orange-500 underline decoration-orange-500/30">After-Hours Dispatching.</span>
+          <span className="text-orange-500">After-Hours Dispatching.</span>
         </h1>
         
-        <p className="text-base sm:text-lg lg:text-2xl text-slate-100 max-w-3xl mx-auto mb-12 font-bold leading-relaxed drop-shadow-[0_5px_15px_rgba(0,0,0,0.6)]">
+        <p className="text-base sm:text-lg lg:text-2xl text-slate-100 max-w-3xl mx-auto mb-12 font-bold leading-relaxed drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] px-4">
           The first AI safety-compliance lab for GTA HVAC operators. 
           Scaling <span className="text-orange-400 font-extrabold">Emergency Response</span> and <span className="text-orange-400 font-extrabold">Rebate Revenue</span> across Ontario.
         </p>
@@ -36,13 +39,13 @@ const Hero: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
           <a 
             href="#demo"
-            className="w-full sm:w-auto px-10 py-5 bg-orange-500 hover:bg-orange-400 text-white rounded-2xl font-black transition-all shadow-[0_20px_40px_-10px_rgba(249,115,22,0.6)] hover:shadow-[0_25px_50px_-10px_rgba(249,115,22,0.7)] uppercase tracking-widest text-lg md:text-xl border-b-8 border-orange-700 active:translate-y-1 active:border-b-4"
+            className="w-full sm:w-auto px-12 py-6 bg-orange-500 hover:bg-orange-400 text-white rounded-2xl font-black transition-all shadow-[0_20px_40px_-10px_rgba(249,115,22,0.6)] hover:shadow-[0_25px_50px_-10px_rgba(249,115,22,0.7)] uppercase tracking-widest text-lg md:text-xl border-b-8 border-orange-700 active:translate-y-1 active:border-b-4"
           >
             Launch Dispatch Agent
           </a>
           <a 
             href="#overview"
-            className="w-full sm:w-auto px-10 py-5 bg-white text-navy hover:bg-slate-100 rounded-2xl font-black transition-all uppercase tracking-widest text-lg md:text-xl shadow-2xl border-b-8 border-slate-300 active:translate-y-1 active:border-b-4"
+            className="w-full sm:w-auto px-12 py-6 bg-white/10 backdrop-blur-xl text-white hover:bg-white/20 rounded-2xl font-black transition-all uppercase tracking-widest text-lg md:text-xl border-2 border-white/20 active:translate-y-1"
           >
             Pilot Details
           </a>

@@ -4,20 +4,19 @@ import React from 'react';
 const Hero: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A192F]">
-      {/* Background Image - Set to 'contain' to ensure nothing is cut off */}
+      {/* Background Image - Set to 'contain' and centered to ensure 100% visibility of the source 2K asset */}
       <div 
         className="absolute inset-0 z-0 bg-no-repeat transition-opacity duration-1000"
         style={{ 
           backgroundImage: `url('https://i.ibb.co/pvhW7RcV/gemini-3-pro-image-preview-2k-nano-banana-pro-a-Replace-the-current.png')`,
           backgroundSize: 'contain',
-          backgroundPosition: 'center center', 
-          filter: 'brightness(0.8) contrast(1.05)',
+          backgroundPosition: 'center center',
           backgroundColor: '#0A192F'
         }}
       >
-        {/* Softened Gradient Overlays to preserve the full visibility of the background image */}
+        {/* Softened overlays that protect the image edges and ensure text legibility while preserving the focal points */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A192F]/40 via-transparent to-[#0A192F]/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/60 via-transparent to-[#0A192F]/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/20 via-transparent to-[#0A192F]/20"></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center pt-32 pb-20 md:pt-40">
@@ -55,7 +54,7 @@ const Hero: React.FC = () => {
       {/* Stats Overlay */}
       <div className="absolute bottom-12 w-full px-6 hidden lg:block z-10">
         <div className="container mx-auto">
-          <div className="grid grid-cols-4 gap-8 bg-navy/80 backdrop-blur-2xl p-10 rounded-[2.5rem] border-2 border-white/10 max-w-5xl mx-auto shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)]">
+          <div className="grid grid-cols-4 gap-8 bg-[#0A192F]/80 backdrop-blur-2xl p-10 rounded-[2.5rem] border-2 border-white/10 max-w-5xl mx-auto shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)]">
             <div className="text-left border-l-2 border-orange-500/50 pl-6 first:border-0 first:pl-0">
               <div className="text-4xl font-black text-white">4H</div>
               <div className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mt-1">Ontario-Wide SLA</div>

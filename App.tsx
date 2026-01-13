@@ -1,9 +1,9 @@
 
 import React, { useEffect } from 'react';
-import Hero from './components/Hero.tsx';
-import Overview from './components/Overview.tsx';
-import VoiceAgent from './components/VoiceAgent.tsx';
-import Footer from './components/Footer.tsx';
+import Hero from './components/Hero';
+import Overview from './components/Overview';
+import VoiceAgent from './components/VoiceAgent';
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -11,13 +11,10 @@ const App: React.FC = () => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
       
-      // If it's a standard anchor pointing to an ID (excluding our custom orange triggers)
       if (anchor && anchor.getAttribute('href')?.startsWith('#')) {
         const id = anchor.getAttribute('href')?.substring(1);
         if (!id) return;
 
-        // Special handling for demo-related orange buttons is done via onClick in components,
-        // but we handle standard navigation here.
         const element = document.getElementById(id);
         if (element) {
           e.preventDefault();
@@ -39,7 +36,6 @@ const App: React.FC = () => {
     if (demoSection) {
       demoSection.scrollIntoView({ behavior: 'smooth' });
     }
-    // Dispatch the same event as the Hero button
     window.dispatchEvent(new CustomEvent('vapi-start'));
   };
 

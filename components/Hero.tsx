@@ -4,20 +4,20 @@ import React from 'react';
 const Hero: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A192F]">
-      {/* Background Image - Updated to the new high-end URL with cover sizing */}
+      {/* Background Image - Set to 'contain' to ensure nothing is cut off */}
       <div 
         className="absolute inset-0 z-0 bg-no-repeat transition-opacity duration-1000"
         style={{ 
-          backgroundImage: `url('https://i.ibb.co/spvwtzxb/hunyuan-image-3-0-b-Replace-the-current.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 20%', 
-          filter: 'brightness(0.7) contrast(1.1) saturate(1.1)',
+          backgroundImage: `url('https://i.ibb.co/pvhW7RcV/gemini-3-pro-image-preview-2k-nano-banana-pro-a-Replace-the-current.png')`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center center', 
+          filter: 'brightness(0.8) contrast(1.05)',
           backgroundColor: '#0A192F'
         }}
       >
-        {/* Cinematic Gradient Overlays to ensure text legibility and focus on subject */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#0A192F] via-[#0A192F]/40 to-transparent opacity-90"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0A192F]/90"></div>
+        {/* Softened Gradient Overlays to preserve the full visibility of the background image */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A192F]/40 via-transparent to-[#0A192F]/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/60 via-transparent to-[#0A192F]/60"></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center pt-32 pb-20 md:pt-40">
